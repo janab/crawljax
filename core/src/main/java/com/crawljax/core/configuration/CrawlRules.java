@@ -147,6 +147,11 @@ public class CrawlRules {
 			crawlRules.clickOnce = once;
 			return this;
 		}
+		
+		public CrawlRulesBuilder setRandomization(boolean randomized) {
+			crawlRules.randomize = randomized;
+			return this;
+		}
 
 		/**
 		 * @param frames
@@ -287,6 +292,7 @@ public class CrawlRules {
 	private InputSpecification inputSpecification = new InputSpecification();
 	private boolean testInvariantsWhileCrawling = true;
 	private boolean clickOnce = true;
+	private boolean randomize = false;
 	private boolean crawlFrames = true;
 	private boolean crawlHiddenAnchors = false;
 	private long waitAfterReloadUrl = DEFAULT_WAIT_AFTER_RELOAD;
@@ -327,6 +333,10 @@ public class CrawlRules {
 		return clickOnce;
 	}
 
+	public boolean isRandomized() {
+		return randomize;
+	}
+	
 	public boolean shouldCrawlFrames() {
 		return crawlFrames;
 	}

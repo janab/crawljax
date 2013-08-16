@@ -2,6 +2,7 @@ package com.crawljax.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +34,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -52,6 +54,8 @@ public class CandidateElementExtractor {
 	private final ImmutableList<CrawlElement> includedCrawlElements;
 
 	private final boolean clickOnce;
+	
+	private final boolean randomize;
 
 	private final ImmutableSortedSet<String> ignoredFrameIdentifiers;
 
@@ -86,6 +90,7 @@ public class CandidateElementExtractor {
 
 		crawlFrames = rules.shouldCrawlFrames();
 		clickOnce = rules.isClickOnce();
+		randomize = rules.isRandomized();
 		ignoredFrameIdentifiers = rules.getIgnoredFrameIdentifiers();
 	}
 
@@ -126,6 +131,13 @@ public class CandidateElementExtractor {
 			throw new CrawljaxException(e);
 		}
 		ImmutableList<CandidateElement> found = results.build();
+		
+		if(randomize){
+			ArrayList<CandidateElement> shuffleCandidateElements = Lists.newArrayList(found);
+			Collections.shuffle(shuffleCandidateElements);
+			found = ImmutableList.copyOf(shuffleCandidateElements.iterator());
+		}
+			
 		LOG.debug("Found {} new candidate elements to analyze!", found.size());
 		return found;
 	}
